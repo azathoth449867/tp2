@@ -202,12 +202,13 @@ public class GUITP2 {
         // 2. À compléter, afficher la place choisie dans le champMessage
         // à partir de la lettre ou du chiffre cliqué en paramètre
         place += lettreChiffre;
-        champMessage.setText(place);
+        champMessage.setText("Votre place : " + place);
     }
 
     private void boutonEntree_actionPerformed() {
         //3. à coder
         System.out.println(place);
+        //valider, sinon afficher et vider place
         System.out.println("boutton entrer");
     }
 
@@ -259,6 +260,7 @@ public class GUITP2 {
     private void boutonRapport_actionPerformed() {
         //13 à coder
         System.out.println("boutton Rapport");
+        //dans message, total: banque
     }
 
     public static void main(String[] args) {
