@@ -197,70 +197,103 @@ public class GUITP2 {
                 boutonAnnuler_actionPerformed();
         }
     }
-
+    Borne b = new Borne();
+    boolean entreePlace = true;
+    boolean transactionEncours = false;
     public void boutonNumeroLettre_actionPerformed(String lettreChiffre) {
-        // 2. À compléter, afficher la place choisie dans le champMessage
-        // à partir de la lettre ou du chiffre cliqué en paramètre
-        place += lettreChiffre;
-        champMessage.setText("Votre place : " + place);
+        if (entreePlace) {
+            // 2. À compléter, afficher la place choisie dans le champMessage
+            // à partir de la lettre ou du chiffre cliqué en paramètre
+            place += lettreChiffre;
+            champMessage.setText("Votre place : " + place);
+        }
     }
 
     private void boutonEntree_actionPerformed() {
-        //3. à coder
-        System.out.println(place);
-        //valider, sinon afficher et vider place
-        System.out.println("boutton entrer");
+        if (entreePlace) {
+            //3. à coder
+            if (b.verifPlace(place)) {
+                champMessage.setText("Place Valide...");
+                entreePlace = false;
+                transactionEncours = true;
+            } else {
+                champMessage.setText(place + "est invalid");
+                place = "";
+            }
+            //valider, sinon afficher et vider place
+            System.out.println("boutton entrer");
+        }
     }
 
     private void bouton25_actionPerformed() {
-        //4. à coder
-        System.out.println("boutton 25");
+        if (transactionEncours) {
+            //4. à coder
+            System.out.println("boutton 25");
+        }
     }
 
     private void bouton100_actionPerformed() {
-        //5. à coder
-        System.out.println("boutton 100");
+        if (transactionEncours) {
+            //5. à coder
+            System.out.println("boutton 100");
+        }
     }
 
     private void bouton200_actionPerformed() {
-        //6. à coder
-        System.out.println("boutton 200");
+        if (transactionEncours) {
+            //6. à coder
+            System.out.println("boutton 200");
+        }
     }
 
     private void boutonValiderDateExp_actionPerformed(){
-        //7. à coder
-        System.out.println("boutton Valider");
+        if (transactionEncours) {
+            //7. à coder
+            System.out.println("boutton Valider");
+        }
     }
 
     private void boutonPlus_actionPerformed() {
-        //8. à coder
-        System.out.println("boutton +");
+        if (transactionEncours) {
+            //8. à coder
+            System.out.println("boutton +");
+        }
     }
 
     private void boutonMoins_actionPerformed(){
-        //9. à coder
-        System.out.println("boutton -");
+        if (transactionEncours) {
+            //9. à coder
+            System.out.println("boutton -");
+        }
     }
 
     private void boutonMax_actionPerformed() {
-        //10. à coder
-        System.out.println("boutton Max");
+        if (transactionEncours) {
+            //10. à coder
+            System.out.println("boutton Max");
+        }
     }
 
     private void boutonOK_actionPerformed() {
-        // 11 à coder
-        System.out.println("boutton OK");
+        if (transactionEncours) {
+            // 11 à coder
+            System.out.println("boutton OK");
+        }
     }
 
     private void boutonAnnuler_actionPerformed() {
-       //12 à coder
-        System.out.println("boutton Annuler");
+       if (transactionEncours) {
+           //12 à coder
+           System.out.println("boutton Annuler");
+       }
     }
 
     private void boutonRapport_actionPerformed() {
-        //13 à coder
-        System.out.println("boutton Rapport");
-        //dans message, total: banque
+        if (!transactionEncours) {
+            //13 à coder
+            System.out.println("boutton Rapport");
+            //dans message, total: banque
+        }
     }
 
     public static void main(String[] args) {

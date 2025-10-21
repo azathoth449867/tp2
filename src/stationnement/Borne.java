@@ -13,7 +13,7 @@ public class Borne {
 
 
     public boolean verifPlace(String place){
-        String valid = "^G\\d{3}";                // !!ajouter Sq plus tard
+        String valid = "^G\\d{3}$";                // !!ajouter Sq plus tard
         return place.matches(valid);
     }
 
