@@ -83,10 +83,17 @@ public class Borne {
         }
     }
 
-
+    public YearMonth parseExp(String exp){
+        String month = String.valueOf(exp.charAt(0) + exp.charAt(1));
+        int mois = Integer.parseInt(month);
+        String year = String.valueOf(exp.charAt(0) + exp.charAt(1));
+        int anne = Integer.parseInt(year);
+        YearMonth expiration = YearMonth.parse()//////////////////////////
+    }
     private boolean estExpirer(CarteCredit carte){
         return carte.getExp().isBefore(YearMonth.now());
     }
+
     public void payerCredit(CarteCredit carte){
         if (!estExpirer(carte)){
             int heures = (duree + 59) / 60;

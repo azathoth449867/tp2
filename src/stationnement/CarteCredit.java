@@ -12,6 +12,11 @@ public class CarteCredit {
         this.exp = exp;
         this.solde = solde;
     }
+    public CarteCredit(String num, YearMonth exp) {
+        this.num = num;
+        this.exp = exp;
+        this.solde = 0;
+    }
 
     public String getNum() {
         return num;

@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -249,7 +250,12 @@ public class GUITP2 {
     private void boutonValiderDateExp_actionPerformed(){
         if (transactionEncours) {
             //7. à coder
-            System.out.println("boutton Valider");
+            String month = String.valueOf(champDateExp.getText().charAt(0) + champDateExp.getText().charAt(1));
+            int mois = Integer.parseInt(month);
+            String year = String.valueOf(champDateExp.getText().charAt(0) + champDateExp.getText().charAt(1));
+            int anne = Integer.parseInt(year);
+            YearMonth expiration =
+                    System.out.println(champDateExp.getText());
         }
     }
 
