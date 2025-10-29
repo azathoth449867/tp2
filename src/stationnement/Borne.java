@@ -1,7 +1,5 @@
 package stationnement;
 
-import java.awt.image.BandCombineOp;
-import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -13,6 +11,7 @@ public class Borne {
     private int banque;
     private int duree = 0;
     private int prixStationnement = 0;
+    private CarteCredit currentCard;
 
     public Borne(){
 
@@ -32,6 +31,10 @@ public class Borne {
         return transaction;
     }
 
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
+    }
+
     public int getBanque() {
         return banque;
     }
@@ -46,6 +49,14 @@ public class Borne {
 
     public void setDuree(int duree) {
         this.duree = duree;
+    }
+
+    public CarteCredit getCurrentCard() {
+        return currentCard;
+    }
+
+    public void setCurrentCard(CarteCredit currentCard) {
+        this.currentCard = currentCard;
     }
 
     public boolean verifPlace(String place){
@@ -84,14 +95,24 @@ public class Borne {
     }
 
     public YearMonth parseExp(String exp){
-        String month = String.valueOf(exp.charAt(0) + exp.charAt(1));
-        int mois = Integer.parseInt(month);
-        String year = String.valueOf(exp.charAt(0) + exp.charAt(1));
-        int anne = Integer.parseInt(year);
-        YearMonth expiration = YearMonth.parse()//////////////////////////
+        String monthstr = exp.substring(0,2);
+        int month = Integer.parseInt(monthstr);
+        String yearstr = exp.substring(3,5);
+        int year = Integer.parseInt(yearstr);
+        if (month > 12){
+            month = 1;
+            year = 1;
+        }
+        return YearMonth.of(2000 + year, month);
     }
     private boolean estExpirer(CarteCredit carte){
         return carte.getExp().isBefore(YearMonth.now());
+    }
+    public boolean carteValid(CarteCredit carte){
+//        boolean exp =  (!estExpirer(carte));
+//        boolean num = carte.getNum().length() == 16 + 3;
+//        return exp && num;
+        return (!estExpirer(carte)) && carte.getNum().length() == 16 + 3;
     }
 
     public void payerCredit(CarteCredit carte){

@@ -46,7 +46,7 @@ public class GUITP2 {
 
     // variables utiles pour vous
     String place =""; //place de stationnement choisie
-    Borne borne; // borne à créer dans le constructeur
+    Borne b; // borne à créer dans le constructeur
 
     //formatage
     public GUITP2() throws ParseException {
@@ -127,7 +127,7 @@ public class GUITP2 {
         boutonRapport.addActionListener(ecouteurControles);
 
         //1. créer objet stationnement.Borne
-
+            b = new Borne();
     }
 
     private void createUIComponents() {
@@ -198,7 +198,7 @@ public class GUITP2 {
                 boutonAnnuler_actionPerformed();
         }
     }
-    Borne b = new Borne();
+
     boolean entreePlace = true;
     boolean transactionEncours = false;
     public void boutonNumeroLettre_actionPerformed(String lettreChiffre) {
@@ -211,12 +211,11 @@ public class GUITP2 {
     }
 
     private void boutonEntree_actionPerformed() {
-        if (entreePlace) {
+        if (b.getTransaction() == null) {
             //3. à coder
             if (b.verifPlace(place)) {
                 champMessage.setText("Place Valide...");
-                entreePlace = false;
-                transactionEncours = true;
+                b.setTransaction(new Transaction(0,0,place));
             } else {
                 champMessage.setText(place + "est invalid");
                 place = "";
@@ -248,14 +247,16 @@ public class GUITP2 {
     }
 
     private void boutonValiderDateExp_actionPerformed(){
-        if (transactionEncours) {
-            //7. à coder
-            String month = String.valueOf(champDateExp.getText().charAt(0) + champDateExp.getText().charAt(1));
-            int mois = Integer.parseInt(month);
-            String year = String.valueOf(champDateExp.getText().charAt(0) + champDateExp.getText().charAt(1));
-            int anne = Integer.parseInt(year);
-            YearMonth expiration =
-                    System.out.println(champDateExp.getText());
+        if (b.getTransaction() != null) {
+            YearMonth expiration = b.parseExp(champDateExp.getText());
+            CarteCredit carte = new CarteCredit(champNumeroCarte.getText(), expiration, 900);
+            if (b.carteValid(carte)) {
+                champMessage.setText("Votre carte est Valide");
+                b.setCurrentCard(carte);
+            } else {
+                champMessage.setText("Votre carte est invalide");
+                ;
+            }
         }
     }
 
