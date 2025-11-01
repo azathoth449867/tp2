@@ -109,9 +109,7 @@ public class Borne {
         return carte.getExp().isBefore(YearMonth.now());
     }
     public boolean carteValid(CarteCredit carte){
-//        boolean exp =  (!estExpirer(carte));
-//        boolean num = carte.getNum().length() == 16 + 3;
-//        return exp && num;
+
         return (!estExpirer(carte)) && carte.getNum().length() == 16 + 3;
     }
 
@@ -124,9 +122,7 @@ public class Borne {
         }
     }
 
-    public void createTransaction(){
-        this.transaction = new Transaction(duree, prixStationnement, place);
-    }
+
 
     public void ajouterDuree(int ajout){
         if (duree + ajout > 120){
@@ -136,6 +132,15 @@ public class Borne {
             duree += ajout;
         }
     }
+
+    public void ajouterMontant(int montant){
+        transaction.setPrixTransaction(transaction.getPrixTransaction() + montant);
+    }
+    public int calcDuree(){
+        int tarif = (place.startsWith("G") ? 425 : 225);
+        return (int) Math.round((transaction.getPrixTransaction() * 60.0) / tarif);
+    }
+
 
 
     public int genererRapport(){

@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -215,20 +216,20 @@ public class GUITP2 {
             //3. à coder
             if (b.verifPlace(place)) {
                 champMessage.setText("Place Valide...");
-                b.setTransaction(new Transaction(0,0,place));
+                b.setTransaction(new Transaction(place));
+                b.setPlace(place);
             } else {
-                champMessage.setText(place + "est invalid");
+                champMessage.setText(place + " est invalid");
                 place = "";
             }
-            //valider, sinon afficher et vider place
-            System.out.println("boutton entrer");
         }
     }
 
     private void bouton25_actionPerformed() {
-        if (transactionEncours) {
+        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now())) {
             //4. à coder
-            System.out.println("boutton 25");
+            b.ajouterMontant(25);
+            champMessage.setText(String.valueOf(b.calcDuree()));
         }
     }
 
@@ -240,9 +241,10 @@ public class GUITP2 {
     }
 
     private void bouton200_actionPerformed() {
-        if (transactionEncours) {
-            //6. à coder
-            System.out.println("boutton 200");
+        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now())) {
+            //4. à coder
+            b.ajouterMontant(200);
+            champMessage.setText("Durée total : " + String.valueOf((b.calcDuree()) + "minutes"));
         }
     }
 
