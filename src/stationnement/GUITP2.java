@@ -226,7 +226,7 @@ public class GUITP2 {
     }
 
     private void bouton25_actionPerformed() {
-        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now())) {
+        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now().plusMinutes(b.calcDuree()))) {
             //4. à coder
             b.ajouterMontant(25);
             champMessage.setText("Durée total : " + String.valueOf((b.calcDuree()) + "minutes"));
@@ -234,7 +234,7 @@ public class GUITP2 {
     }
 
     private void bouton100_actionPerformed() {
-        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now())) {
+        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now().plusMinutes(b.calcDuree()))) {
             //4. à coder
             b.ajouterMontant(100);
             champMessage.setText("Durée total : " + String.valueOf((b.calcDuree()) + "minutes"));
@@ -242,7 +242,7 @@ public class GUITP2 {
     }
 
     private void bouton200_actionPerformed() {
-        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now())) {
+        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now().plusMinutes(b.calcDuree()))) {
             //4. à coder
             b.ajouterMontant(200);
             champMessage.setText("Durée total : " + String.valueOf((b.calcDuree()) + "minutes"));

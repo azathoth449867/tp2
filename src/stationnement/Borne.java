@@ -144,6 +144,7 @@ public class Borne {
 
 
     public int genererRapport(){
+
         return banque;
     }
 
