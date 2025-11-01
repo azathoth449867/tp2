@@ -229,14 +229,15 @@ public class GUITP2 {
         if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now())) {
             //4. à coder
             b.ajouterMontant(25);
-            champMessage.setText(String.valueOf(b.calcDuree()));
+            champMessage.setText("Durée total : " + String.valueOf((b.calcDuree()) + "minutes"));
         }
     }
 
     private void bouton100_actionPerformed() {
-        if (transactionEncours) {
-            //5. à coder
-            System.out.println("boutton 100");
+        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now())) {
+            //4. à coder
+            b.ajouterMontant(100);
+            champMessage.setText("Durée total : " + String.valueOf((b.calcDuree()) + "minutes"));
         }
     }
 
