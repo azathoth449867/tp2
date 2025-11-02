@@ -12,6 +12,7 @@ public class Borne {
     private int duree = 0;
     private int prixStationnement = 0;
     private CarteCredit currentCard;
+    private Piece currentPiece;
 
     public Borne(){
 
@@ -65,6 +66,14 @@ public class Borne {
 
     public void setPrixStationnement(int prixStationnement) {
         this.prixStationnement = prixStationnement;
+    }
+
+    public Piece getCurrentPiece() {
+        return currentPiece;
+    }
+
+    public void setCurrentPiece(Piece currentPiece) {
+        this.currentPiece = currentPiece;
     }
 
     public boolean verifPlace(String place){
@@ -157,7 +166,7 @@ public class Borne {
     public void ajouterMontant(int montant){
         int dureeActuelle = calcDuree(transaction.getPrixTransaction());
         int tarif = (place.startsWith("G") ? 425 : 225);
-        if(dureeActuelle < 120) {
+        if(dureeActuelle < 120 && estTarifable(LocalDateTime.now().plusMinutes(transaction.getTempStationement())) ) {
             int dureeAjoutee = calcDuree(montant);
             LocalDateTime trueEnd = getHeureFinTarif(LocalDateTime.now());
 
@@ -179,6 +188,11 @@ public class Borne {
             }
         }
 
+    }
+
+
+    public void ajouterABanque(int montant){
+        banque += montant;
     }
 
 

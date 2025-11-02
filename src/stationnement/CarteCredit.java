@@ -29,4 +29,11 @@ public class CarteCredit {
     public void setSolde(int solde) {
         this.solde = solde;
     }
+
+    public void payer(int montant){
+        solde -= montant;
+    }
+
+
 }
+

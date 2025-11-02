@@ -208,6 +208,7 @@ public class GUITP2 {
             // à partir de la lettre ou du chiffre cliqué en paramètre
             place += lettreChiffre;
             champMessage.setText("Votre place : " + place);
+            zoneRecu.setText("");
         }
     }
 
@@ -228,7 +229,8 @@ public class GUITP2 {
     private void bouton25_actionPerformed() {
         if (b.getTransaction() != null) {
             //4. à coder
-            b.ajouterMontant(25);
+            b.setCurrentPiece(new Piece(25));
+            b.ajouterMontant(b.getCurrentPiece().getValeur());
             int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
             int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
             champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
@@ -239,7 +241,8 @@ public class GUITP2 {
     private void bouton100_actionPerformed() {
         if (b.getTransaction() != null) {
             //4. à coder
-            b.ajouterMontant(100);
+            b.setCurrentPiece(new Piece(100));
+            b.ajouterMontant(b.getCurrentPiece().getValeur());
             int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
             int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
             champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
@@ -250,7 +253,8 @@ public class GUITP2 {
     private void bouton200_actionPerformed() {
         if (b.getTransaction() != null) {
             //4. à coder
-            b.ajouterMontant(200);
+            b.setCurrentPiece(new Piece(200));
+            b.ajouterMontant(b.getCurrentPiece().getValeur());
             int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
             int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
             champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
@@ -273,44 +277,53 @@ public class GUITP2 {
     }
 
     private void boutonPlus_actionPerformed() {
-        if (transactionEncours) {
+        if (b.getTransaction() != null) {
             //8. à coder
             System.out.println("boutton +");
         }
     }
 
     private void boutonMoins_actionPerformed(){
-        if (transactionEncours) {
+        if (b.getTransaction() != null) {
             //9. à coder
             System.out.println("boutton -");
         }
     }
 
     private void boutonMax_actionPerformed() {
-        if (transactionEncours) {
+        if (b.getTransaction() != null) {
             //10. à coder
             System.out.println("boutton Max");
         }
     }
 
     private void boutonOK_actionPerformed() {
-        if (transactionEncours) {
+        if (b.getTransaction() != null) {
             // 11 à coder
-            System.out.println("boutton OK");
+            b.getTransaction().setHeureFin(b.getTransaction().getHeureDebut().plusMinutes(b.getTransaction().getTempStationement()));
+            zoneRecu.setText(b.getTransaction().toString());
+            b.ajouterABanque(b.getTransaction().getPrixTransaction());
+            //b.getCurrentCard().payer(b.getTransaction().getPrixTransaction());
+            b.setTransaction(null);
+            place = "";
+            champMessage.setText("");
         }
     }
 
     private void boutonAnnuler_actionPerformed() {
-       if (transactionEncours) {
+       if (b.getTransaction() != null) {
            //12 à coder
+           b.setTransaction(null);
+           champMessage.setText("");
+           place = "";
            System.out.println("boutton Annuler");
        }
     }
 
     private void boutonRapport_actionPerformed() {
-        if (!transactionEncours) {
+        if (b.getTransaction() == null) {
             //13 à coder
-            System.out.println("boutton Rapport");
+            champMessage.setText("Total amassé : " + b.getBanque());
             //dans message, total: banque
         }
     }

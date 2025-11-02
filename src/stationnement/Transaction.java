@@ -1,5 +1,6 @@
 package stationnement;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
 public class Transaction {
@@ -57,6 +58,19 @@ public class Transaction {
         prixTransaction = 0;
         heureDebut = LocalDateTime.now();
         heureFin = null;
+    }
+
+
+    @Override
+    public String toString(){
+        DecimalFormat prix = new DecimalFormat("0.0"); //////////////
+
+
+        return "---Transaction---" + "\n" +
+                "prix : " + prixTransaction + "$" + "\n" +
+                "Heure de début : " + heureDebut.getHour() + ":" + heureDebut.getMinute() +
+                "-----Heure d'échéance : " + heureFin.getHour() + ":" + heureFin.getMinute() + "\n" +
+                "Durée : " + tempStationement;
     }
 
 }
