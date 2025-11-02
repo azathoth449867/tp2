@@ -112,18 +112,23 @@ public class Borne {
     }
 
     public YearMonth parseExp(String exp){
-        String monthstr = exp.substring(0,2);
-        int month = Integer.parseInt(monthstr);
-        String yearstr = exp.substring(3,5);
-        int year = Integer.parseInt(yearstr);
-        if (month > 12){
-            month = 1;
-            year = 1;
+        if(exp.matches("\\d{2}.\\d{2}")) {
+            String monthstr = exp.substring(0, 2);
+            int month = Integer.parseInt(monthstr);
+            String yearstr = exp.substring(3, 5);
+            int year = Integer.parseInt(yearstr);
+            if (month > 12 || month == 0) {
+                month = 1;
+                year = 1;
+            }
+            return YearMonth.of(2000 + year, month);
         }
-        return YearMonth.of(2000 + year, month);
+        return null;
     }
     private boolean estExpirer(CarteCredit carte){
-        return carte.getExp().isBefore(YearMonth.now());
+        if(carte.getExp() != null)
+            return carte.getExp().isBefore(YearMonth.now());
+        return true;
     }
     public boolean carteValid(CarteCredit carte){
 
@@ -164,9 +169,9 @@ public class Borne {
     }
 
     public void ajouterMontant(int montant){
-        int dureeActuelle = calcDuree(transaction.getPrixTransaction());
+        int dureeActuelle = /* calcDuree(transaction.getPrixTransaction());*/ transaction.getTempStationement();
         int tarif = (place.startsWith("G") ? 425 : 225);
-        if(dureeActuelle < 120 && estTarifable(LocalDateTime.now().plusMinutes(transaction.getTempStationement())) ) {
+        if(dureeActuelle <= 120 && dureeActuelle >= 0 && estTarifable(LocalDateTime.now().plusMinutes(transaction.getTempStationement())) ) {
             int dureeAjoutee = calcDuree(montant);
             LocalDateTime trueEnd = getHeureFinTarif(LocalDateTime.now());
 
@@ -185,10 +190,28 @@ public class Borne {
             transaction.setTempStationement(calcDuree(transaction.getPrixTransaction()));
             if (transaction.getTempStationement() > 120){
                 transaction.setTempStationement(120);
+                transaction.setPrixTransaction((int) Math.round((120 / 60.0) * tarif));
+            }
+            if (transaction.getTempStationement() < 0){
+                transaction.setTempStationement(0);
+                transaction.setPrixTransaction((int) Math.round((0 / 60.0) * tarif));
             }
         }
 
     }
+
+    public void maxMontant(){
+        long dureeMax = java.time.Duration.between(LocalDateTime.now(), getHeureFinTarif(LocalDateTime.now())).toMinutes();
+        long dureeLimit = java.time.Duration.between(LocalDateTime.now(), LocalDateTime.now().plusMinutes(120)).toMinutes();
+        int tarif = (place.startsWith("G") ? 425 : 225);
+
+        if (dureeMax < dureeLimit){
+            transaction.setTempStationement((int) dureeMax);
+            transaction.setPrixTransaction((int) Math.round((dureeMax / 60.0) * tarif));
+        }
+
+    }
+
 
 
     public void ajouterABanque(int montant){

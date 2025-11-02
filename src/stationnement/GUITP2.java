@@ -279,13 +279,23 @@ public class GUITP2 {
     private void boutonPlus_actionPerformed() {
         if (b.getTransaction() != null) {
             //8. à coder
-            System.out.println("boutton +");
+            b.setCurrentPiece(new Piece(25));
+            b.ajouterMontant(b.getCurrentPiece().getValeur());
+            int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
+            int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
+            champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
+                    + "Heure d'échéance : " + heureEcheance + ":" + minuteEcheance);
         }
     }
 
     private void boutonMoins_actionPerformed(){
         if (b.getTransaction() != null) {
             //9. à coder
+            b.ajouterMontant(-25);
+            int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
+            int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
+            champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
+                    + "Heure d'échéance : " + heureEcheance + ":" + minuteEcheance);
             System.out.println("boutton -");
         }
     }
@@ -293,7 +303,11 @@ public class GUITP2 {
     private void boutonMax_actionPerformed() {
         if (b.getTransaction() != null) {
             //10. à coder
-            System.out.println("boutton Max");
+            b.maxMontant();
+            int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
+            int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
+            champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
+                    + "Heure d'échéance : " + heureEcheance + ":" + minuteEcheance);
         }
     }
 
@@ -324,6 +338,7 @@ public class GUITP2 {
         if (b.getTransaction() == null) {
             //13 à coder
             champMessage.setText("Total amassé : " + b.getBanque());
+            b.setBanque(0);
             //dans message, total: banque
         }
     }

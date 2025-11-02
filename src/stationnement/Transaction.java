@@ -10,6 +10,12 @@ public class Transaction {
     private String placeReserver;
     private LocalDateTime heureDebut;
     private LocalDateTime heureFin;
+    private TypePaiment typePaiment = TypePaiment.Inconnue;
+    enum TypePaiment{
+        Inconnue,
+        Credit,
+        Monnais
+    }
 
 
     public int getTempStationement() {
@@ -52,6 +58,14 @@ public class Transaction {
         this.heureFin = heureFin;
     }
 
+    public TypePaiment getTypePaiment() {
+        return typePaiment;
+    }
+
+    public void setTypePaiment(TypePaiment typePaiment) {
+        this.typePaiment = typePaiment;
+    }
+
     public Transaction(String placeReserver){
         this.placeReserver = placeReserver;
         tempStationement = 0;
@@ -59,6 +73,8 @@ public class Transaction {
         heureDebut = LocalDateTime.now();
         heureFin = null;
     }
+
+
 
 
     @Override
