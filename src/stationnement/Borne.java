@@ -59,6 +59,14 @@ public class Borne {
         this.currentCard = currentCard;
     }
 
+    public int getPrixStationnement() {
+        return prixStationnement;
+    }
+
+    public void setPrixStationnement(int prixStationnement) {
+        this.prixStationnement = prixStationnement;
+    }
+
     public boolean verifPlace(String place){
         String valid = "^(G|SQ)\\d{3}$";
         return place.matches(valid);
@@ -122,25 +130,56 @@ public class Borne {
         }
     }
 
+    private LocalDateTime getHeureFinTarif(LocalDateTime jour) {
+        DayOfWeek jourSemaine = jour.getDayOfWeek();
+        int year = jour.getYear();
+        int month = jour.getMonthValue();
+        int day = jour.getDayOfMonth();
 
+        if (place.startsWith("G")) {
+            if (jourSemaine == DayOfWeek.SUNDAY)
+                return LocalDateTime.of(year, month, day, 18, 0);
+            else
+                return LocalDateTime.of(year, month, day, 23, 0);
+        } else {
+            if (jourSemaine == DayOfWeek.SATURDAY)
+                return LocalDateTime.of(year, month, day, 18, 0);
+            else
+                return LocalDateTime.of(year, month, day, 21, 0);
+        }
+    }
 
-    public void ajouterDuree(int ajout){
-        if (duree + ajout > 120){
-            duree = 120;
-        }
-        else {
-            duree += ajout;
-        }
+    public int calcDuree(int montant){
+        int tarif = (place.startsWith("G") ? 425 : 225);
+        return (int) Math.round((montant * 60.0) / tarif);
     }
 
     public void ajouterMontant(int montant){
-        transaction.setPrixTransaction(transaction.getPrixTransaction() + montant);
-    }
-    public int calcDuree(){
+        int dureeActuelle = calcDuree(transaction.getPrixTransaction());
         int tarif = (place.startsWith("G") ? 425 : 225);
-        return (int) Math.round((transaction.getPrixTransaction() * 60.0) / tarif);
-    }
+        if(dureeActuelle < 120) {
+            int dureeAjoutee = calcDuree(montant);
+            LocalDateTime trueEnd = getHeureFinTarif(LocalDateTime.now());
 
+            LocalDateTime currentEnd = LocalDateTime.now().plusMinutes(dureeActuelle + dureeAjoutee);
+
+            if (currentEnd.isBefore(trueEnd) || currentEnd.isEqual(trueEnd)) {
+                transaction.setPrixTransaction(transaction.getPrixTransaction() + montant);
+            } else {
+                long minutesRestantes = java.time.Duration.between(LocalDateTime.now().plusMinutes(dureeActuelle), trueEnd).toMinutes();
+                if (minutesRestantes > 0) {
+                    int montantMax = (int) Math.round((minutesRestantes / 60.0) * tarif);
+                    transaction.setPrixTransaction(transaction.getPrixTransaction() + montantMax);
+
+                }
+            }
+            transaction.setTempStationement(calcDuree(transaction.getPrixTransaction()));
+            if (transaction.getTempStationement() > 120){
+                transaction.setTempStationement(120);
+            }
+        }
+
+    }
 
 
     public int genererRapport(){

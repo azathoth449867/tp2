@@ -203,7 +203,7 @@ public class GUITP2 {
     boolean entreePlace = true;
     boolean transactionEncours = false;
     public void boutonNumeroLettre_actionPerformed(String lettreChiffre) {
-        if (entreePlace) {
+        if (b.getTransaction() == null) {
             // 2. À compléter, afficher la place choisie dans le champMessage
             // à partir de la lettre ou du chiffre cliqué en paramètre
             place += lettreChiffre;
@@ -226,26 +226,35 @@ public class GUITP2 {
     }
 
     private void bouton25_actionPerformed() {
-        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now().plusMinutes(b.calcDuree()))) {
+        if (b.getTransaction() != null) {
             //4. à coder
             b.ajouterMontant(25);
-            champMessage.setText("Durée total : " + String.valueOf((b.calcDuree()) + "minutes"));
+            int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
+            int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
+            champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
+                    + "Heure d'échéance : " + heureEcheance + ":" + minuteEcheance);
         }
     }
 
     private void bouton100_actionPerformed() {
-        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now().plusMinutes(b.calcDuree()))) {
+        if (b.getTransaction() != null) {
             //4. à coder
             b.ajouterMontant(100);
-            champMessage.setText("Durée total : " + String.valueOf((b.calcDuree()) + "minutes"));
+            int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
+            int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
+            champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
+                    + "Heure d'échéance : " + heureEcheance + ":" + minuteEcheance);
         }
     }
 
     private void bouton200_actionPerformed() {
-        if (b.getTransaction() != null && b.estTarifable(LocalDateTime.now().plusMinutes(b.calcDuree()))) {
+        if (b.getTransaction() != null) {
             //4. à coder
             b.ajouterMontant(200);
-            champMessage.setText("Durée total : " + String.valueOf((b.calcDuree()) + "minutes"));
+            int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
+            int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
+            champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
+                    + "Heure d'échéance : " + heureEcheance + ":" + minuteEcheance);
         }
     }
 
