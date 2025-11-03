@@ -88,7 +88,7 @@ public class Borne {
             return jour.getHour() >= 9 && jour.getHour() < 23;
         }
         else if (jour.getDayOfWeek().getValue() == DayOfWeek.SUNDAY.getValue()) {
-            return jour.getHour() >= 13 && jour.getHour() <= 18;
+            return jour.getHour() >= 13 && jour.getHour() < 18;
         }
         return false;
     }
@@ -125,23 +125,16 @@ public class Borne {
         }
         return null;
     }
+
     private boolean estExpirer(CarteCredit carte){
         if(carte.getExp() != null)
             return carte.getExp().isBefore(YearMonth.now());
         return true;
     }
+
     public boolean carteValid(CarteCredit carte){
 
         return (!estExpirer(carte)) && carte.getNum().length() == 16 + 3;
-    }
-
-    public void payerCredit(CarteCredit carte){
-        if (!estExpirer(carte)){
-            int heures = (duree + 59) / 60;
-            prixStationnement = heures * (place.startsWith("G") ? 425 : 225);
-            carte.setSolde(carte.getSolde() - prixStationnement);
-            banque += prixStationnement;
-        }
     }
 
     private LocalDateTime getHeureFinTarif(LocalDateTime jour) {
@@ -201,15 +194,17 @@ public class Borne {
     }
 
     public void maxMontant(){
-        long dureeMax = java.time.Duration.between(LocalDateTime.now(), getHeureFinTarif(LocalDateTime.now())).toMinutes();
-        long dureeLimit = java.time.Duration.between(LocalDateTime.now(), LocalDateTime.now().plusMinutes(120)).toMinutes();
-        int tarif = (place.startsWith("G") ? 425 : 225);
+        boolean verif = estTarifable(LocalDateTime.now());
+        if (verif) {
+            long dureeMax = java.time.Duration.between(LocalDateTime.now(), getHeureFinTarif(LocalDateTime.now())).toMinutes();
+            long dureeLimit = java.time.Duration.between(LocalDateTime.now(), LocalDateTime.now().plusMinutes(120)).toMinutes();
+            int tarif = (place.startsWith("G") ? 425 : 225);
 
-        if (dureeMax < dureeLimit){
-            transaction.setTempStationement((int) dureeMax);
-            transaction.setPrixTransaction((int) Math.round((dureeMax / 60.0) * tarif));
+            if (dureeMax < dureeLimit) {
+                transaction.setTempStationement((int) dureeMax);
+                transaction.setPrixTransaction((int) Math.round((dureeMax / 60.0) * tarif));
+            }
         }
-
     }
 
 
@@ -219,9 +214,16 @@ public class Borne {
     }
 
 
-    public int genererRapport(){
-
-        return banque;
+    public boolean payer(){
+            if (transaction.getCarte() != null) {
+                if (transaction.getPrixTransaction() < transaction.getCarte().getSolde()) {
+                    transaction.getCarte().payer(transaction.getPrixTransaction());
+                    return false;
+                } else{
+                    return true;
+                }
+            }
+            return true;
     }
 
 

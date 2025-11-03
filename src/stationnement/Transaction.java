@@ -3,6 +3,8 @@ package stationnement;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
+import static stationnement.Transaction.TypePaiment.Credit;
+
 public class Transaction {
 
     private int tempStationement;
@@ -11,12 +13,22 @@ public class Transaction {
     private LocalDateTime heureDebut;
     private LocalDateTime heureFin;
     private TypePaiment typePaiment = TypePaiment.Inconnue;
-    enum TypePaiment{
+    private CarteCredit carte = null;
+    public static DecimalFormat prixFormat = new DecimalFormat("0.00");
+
+    protected enum TypePaiment{
         Inconnue,
         Credit,
         Monnais
     }
 
+    public CarteCredit getCarte() {
+        return carte;
+    }
+
+    public void setCarte(CarteCredit carte) {
+        this.carte = carte;
+    }
 
     public int getTempStationement() {
         return tempStationement;
@@ -74,19 +86,15 @@ public class Transaction {
         heureFin = null;
     }
 
-
-
-
     @Override
     public String toString(){
-        DecimalFormat prix = new DecimalFormat("0.0"); //////////////
-
-
         return "---Transaction---" + "\n" +
-                "prix : " + prixTransaction + "$" + "\n" +
+                "prix : " + prixFormat.format(prixTransaction / 100) + "$" + "\n" +
                 "Heure de début : " + heureDebut.getHour() + ":" + heureDebut.getMinute() +
                 "-----Heure d'échéance : " + heureFin.getHour() + ":" + heureFin.getMinute() + "\n" +
-                "Durée : " + tempStationement;
+                "Durée : " + tempStationement +
+                "Place reservée : " + placeReserver + "\n" +
+                "Type de paiment : " + (typePaiment == Credit ? "Carte de credit ( " + (carte == null ? "carte non rentrer" : carte.getNum()) + ")" : "Monnaie");
     }
 
 }

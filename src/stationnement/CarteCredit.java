@@ -13,7 +13,6 @@ public class CarteCredit {
         this.solde = solde;
     }
 
-
     public String getNum() {
         return num;
     }

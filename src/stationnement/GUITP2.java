@@ -200,8 +200,7 @@ public class GUITP2 {
         }
     }
 
-    boolean entreePlace = true;
-    boolean transactionEncours = false;
+
     public void boutonNumeroLettre_actionPerformed(String lettreChiffre) {
         if (b.getTransaction() == null) {
             // 2. À compléter, afficher la place choisie dans le champMessage
@@ -217,8 +216,13 @@ public class GUITP2 {
             //3. à coder
             if (b.verifPlace(place)) {
                 champMessage.setText("Place Valide...");
-                b.setTransaction(new Transaction(place));
                 b.setPlace(place);
+                if(b.estTarifable(LocalDateTime.now())) {
+                    b.setTransaction(new Transaction(place));
+                } else {
+                    champMessage.setText("Place Valide...periode non tarifiaire");
+                    place = "";
+                }
             } else {
                 champMessage.setText(place + " est invalid");
                 place = "";
@@ -227,8 +231,9 @@ public class GUITP2 {
     }
 
     private void bouton25_actionPerformed() {
-        if (b.getTransaction() != null) {
+        if (b.getTransaction() != null && b.getTransaction().getTypePaiment() == Transaction.TypePaiment.Inconnue) {
             //4. à coder
+            b.getTransaction().setTypePaiment(Transaction.TypePaiment.Monnais);
             b.setCurrentPiece(new Piece(25));
             b.ajouterMontant(b.getCurrentPiece().getValeur());
             int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
@@ -239,8 +244,9 @@ public class GUITP2 {
     }
 
     private void bouton100_actionPerformed() {
-        if (b.getTransaction() != null) {
+        if (b.getTransaction() != null && b.getTransaction().getTypePaiment() == Transaction.TypePaiment.Inconnue) {
             //4. à coder
+            b.getTransaction().setTypePaiment(Transaction.TypePaiment.Monnais);
             b.setCurrentPiece(new Piece(100));
             b.ajouterMontant(b.getCurrentPiece().getValeur());
             int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
@@ -251,8 +257,9 @@ public class GUITP2 {
     }
 
     private void bouton200_actionPerformed() {
-        if (b.getTransaction() != null) {
+        if (b.getTransaction() != null && b.getTransaction().getTypePaiment() == Transaction.TypePaiment.Inconnue) {
             //4. à coder
+            b.getTransaction().setTypePaiment(Transaction.TypePaiment.Monnais);
             b.setCurrentPiece(new Piece(200));
             b.ajouterMontant(b.getCurrentPiece().getValeur());
             int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
@@ -269,6 +276,7 @@ public class GUITP2 {
             if (b.carteValid(carte)) {
                 champMessage.setText("Votre carte est Valide");
                 b.setCurrentCard(carte);
+                b.getTransaction().setCarte(carte);
             } else {
                 champMessage.setText("Votre carte est invalide");
                 ;
@@ -277,10 +285,10 @@ public class GUITP2 {
     }
 
     private void boutonPlus_actionPerformed() {
-        if (b.getTransaction() != null) {
+        if (b.getTransaction() != null && b.getTransaction().getTypePaiment() == Transaction.TypePaiment.Inconnue) {
             //8. à coder
-            b.setCurrentPiece(new Piece(25));
-            b.ajouterMontant(b.getCurrentPiece().getValeur());
+            b.getTransaction().setTypePaiment(Transaction.TypePaiment.Credit);
+            b.ajouterMontant(25);
             int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
             int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
             champMessage.setText("Durée total : " + String.valueOf(b.getTransaction().getTempStationement()) + "minutes" + "\n"
@@ -289,8 +297,9 @@ public class GUITP2 {
     }
 
     private void boutonMoins_actionPerformed(){
-        if (b.getTransaction() != null) {
+        if (b.getTransaction() != null && b.getTransaction().getTypePaiment() == Transaction.TypePaiment.Inconnue) {
             //9. à coder
+            b.getTransaction().setTypePaiment(Transaction.TypePaiment.Credit);
             b.ajouterMontant(-25);
             int heureEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getHour();
             int minuteEcheance = b.getTransaction().getHeureDebut().plusMinutes(b.calcDuree(b.getTransaction().getPrixTransaction())).getMinute();
@@ -317,7 +326,9 @@ public class GUITP2 {
             b.getTransaction().setHeureFin(b.getTransaction().getHeureDebut().plusMinutes(b.getTransaction().getTempStationement()));
             zoneRecu.setText(b.getTransaction().toString());
             b.ajouterABanque(b.getTransaction().getPrixTransaction());
-            //b.getCurrentCard().payer(b.getTransaction().getPrixTransaction());
+            if (b.getTransaction().getTypePaiment() == Transaction.TypePaiment.Credit)
+                if (b.payer())
+                    zoneRecu.setText("Aucune carte rentrer ou solde non suffisant, transaction invalide");
             b.setTransaction(null);
             place = "";
             champMessage.setText("");
@@ -337,7 +348,8 @@ public class GUITP2 {
     private void boutonRapport_actionPerformed() {
         if (b.getTransaction() == null) {
             //13 à coder
-            champMessage.setText("Total amassé : " + b.getBanque());
+            champMessage.setText("Total amassé : " + Transaction.prixFormat.format(b.getBanque()) + "$");
+            zoneRecu.setText("");
             b.setBanque(0);
             //dans message, total: banque
         }
